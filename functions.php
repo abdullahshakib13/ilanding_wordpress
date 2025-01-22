@@ -1,8 +1,9 @@
 <?php 
 
-// Theme Title
-add_theme_support('title-tag');
 
+
+// All Default Theme functions is here
+include_once('inc/default.php');
 
 // Theme css and js/jquery file calling
 include_once('inc/enqueue.php');
@@ -15,3 +16,6 @@ include_once('inc/theme_function.php');
 
   // Widgets Register
   include_once('inc/widgets_register.php');
+
+  // Custom Post
+  include_once('inc/custom_post.php');

@@ -24,7 +24,7 @@
               <div class="row gy-4">
                 <div class="col-lg-5">
                   <div class="profile d-flex align-items-center gap-3">
-                    <img src="assets/img/avatar-1.webp" alt="CEO Profile" class="profile-image">
+                    <img src="<?php echo get_template_directory_uri(); ?>/img/avatar-1.webp" alt="CEO Profile" class="profile-image">
                     <div>
                       <h4 class="profile-name">Mario Smith</h4>
                       <p class="profile-position">CEO &amp; Founder</p>
@@ -47,8 +47,8 @@
           <div class="col-xl-6" data-aos="fade-up" data-aos-delay="300">
             <div class="image-wrapper">
               <div class="images position-relative" data-aos="zoom-out" data-aos-delay="400">
-                <img src="assets/img/about-5.webp" alt="Business Meeting" class="img-fluid main-image rounded-4">
-                <img src="assets/img/about-2.webp" alt="Team Discussion" class="img-fluid small-image rounded-4">
+                <img src="<?php echo get_template_directory_uri(); ?>/img/about-5.webp" alt="Business Meeting" class="img-fluid main-image rounded-4">
+                <img src="<?php echo get_template_directory_uri(); ?>/img/about-2.webp" alt="Team Discussion" class="img-fluid small-image rounded-4">
               </div>
               <div class="experience-badge floating">
                 <h3>15+ <span>Years</span></h3>

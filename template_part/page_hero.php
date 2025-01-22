@@ -6,17 +6,27 @@
                 <i class="bi bi-gear-fill me-2"></i>
                 Working for your success
               </div>
+              <?php 
+             
+              query_posts('post_type=service&post_status=publish&post_per_page=3&order=ASC&paged='.get_query_var('post')); 
+              if(have_posts()){
+                  while(have_posts()){
+                      the_post();
+              ?>
 
               <h1 class="mb-4">
-                Maecenas Vitae <br>
+                <?php the_title(); ?>
+                <!-- Maecenas Vitae <br>
                 Consectetur Led <br>
-                <span class="accent-text">Vestibulum Ante</span>
+                <span class="accent-text">Vestibulum Ante</span> -->
               </h1>
 
               <p class="mb-4 mb-md-5">
-                Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt.
-                Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna.
+                <?php the_content(); ?>
+                <!-- Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt.
+                Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. -->
               </p>
+              <?php } }; ?>
 
               <div class="hero-buttons">
                 <a href="#about" class="btn btn-primary me-0 me-sm-2 mx-1">Get Started</a>
@@ -30,15 +40,15 @@
 
           <div class="col-lg-6">
             <div class="hero-image" data-aos="zoom-out" data-aos-delay="300">
-              <img src="assets/img/illustration-1.webp" alt="Hero Image" class="img-fluid">
+              <img src="<?php echo get_template_directory_uri(); ?>/img/illustration-1.webp" alt="Hero Image" class="img-fluid">
 
               <div class="customers-badge">
                 <div class="customer-avatars">
-                  <img src="assets/img/avatar-1.webp" alt="Customer 1" class="avatar">
-                  <img src="assets/img/avatar-2.webp" alt="Customer 2" class="avatar">
-                  <img src="assets/img/avatar-3.webp" alt="Customer 3" class="avatar">
-                  <img src="assets/img/avatar-4.webp" alt="Customer 4" class="avatar">
-                  <img src="assets/img/avatar-5.webp" alt="Customer 5" class="avatar">
+                  <img src="<?php echo get_template_directory_uri(); ?>/img/avatar-1.webp" alt="Customer 1" class="avatar">
+                  <img src="<?php echo get_template_directory_uri(); ?>/img/avatar-2.webp" alt="Customer 2" class="avatar">
+                  <img src="<?php echo get_template_directory_uri(); ?>/img/avatar-3.webp" alt="Customer 3" class="avatar">
+                  <img src="<?php echo get_template_directory_uri(); ?>/img/avatar-4.webp" alt="Customer 4" class="avatar">
+                  <img src="<?php echo get_template_directory_uri(); ?>/img/avatar-5.webp" alt="Customer 5" class="avatar">
                   <span class="avatar more">12+</span>
                 </div>
                 <p class="mb-0 mt-2">12,000+ lorem ipsum dolor sit amet consectetur adipiscing elit</p>
@@ -47,49 +57,29 @@
           </div>
         </div>
 
-        <div class="row stats-row gy-4 mt-5" data-aos="fade-up" data-aos-delay="500">
-          <div class="col-lg-3 col-md-6">
-            <div class="stat-item">
-              <div class="stat-icon">
-                <i class="bi bi-trophy"></i>
-              </div>
-              <div class="stat-content">
-                <h4>3x Won Awards</h4>
-                <p class="mb-0">Vestibulum ante ipsum</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="stat-item">
-              <div class="stat-icon">
-                <i class="bi bi-briefcase"></i>
-              </div>
-              <div class="stat-content">
-                <h4>6.5k Faucibus</h4>
-                <p class="mb-0">Nullam quis ante</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="stat-item">
-              <div class="stat-icon">
-                <i class="bi bi-graph-up"></i>
-              </div>
-              <div class="stat-content">
-                <h4>80k Mauris</h4>
-                <p class="mb-0">Etiam sit amet orci</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-md-6">
-            <div class="stat-item">
-              <div class="stat-icon">
-                <i class="bi bi-award"></i>
-              </div>
-              <div class="stat-content">
-                <h4>6x Phasellus</h4>
-                <p class="mb-0">Vestibulum ante ipsum</p>
-              </div>
-            </div>
-          </div>
+      
+
+        <div class="row stats-row gy-4 mt-5">
+            <?php
+            query_posts('post_type=stats&post_status=publish&post_per_page=3&order=ASC&paged='.get_query_var('post')); 
+            if(have_posts()){
+              while(have_posts()){
+                  the_post();
+          ?>
+                    <div class="col-lg-3 col-md-6">
+                      <div class="stat-item">
+                        <div class="stat-icon">
+                          <i class="<?php echo get_post_meta(get_the_ID(), 'icon_class', true); ?>"></i>
+                        </div>
+                        <div class="stat-content">
+                          <h4><?php the_title(); ?></h4>
+                          <p class="mb-0"><?php the_content(); ?></p>
+                        </div>
+                      </div>
+                    </div>
+                <?php
+                    };
+                    
+                  };
+                ?>
         </div>
