@@ -72,13 +72,11 @@
 
     <!-- Clients Section -->
     <section id="clients" class="clients section">
-
       <div class="container" data-aos="fade-up" data-aos-delay="100">
-
         <div class="swiper init-swiper">
-            <?php get_template_part('template_part/clients'); ?>
-        </div>
+          <?php get_template_part('template_part/clients'); ?>
 
+        </div>
       </div>
 
     </section><!-- /Clients Section -->
