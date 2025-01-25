@@ -69,7 +69,7 @@
                     <div class="col-lg-3 col-md-6">
                       <div class="stat-item">
                         <div class="stat-icon">
-                          <i class="<?php echo get_post_meta(get_the_ID(), 'icon_class', true); ?>"></i>
+                          <i class="<?php echo get_post_meta(get_the_ID(), '_stats_icon_class', true); ?>"></i>
                         </div>
                         <div class="stat-content">
                           <h4><?php the_title(); ?></h4>

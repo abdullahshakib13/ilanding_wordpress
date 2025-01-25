@@ -29,7 +29,8 @@
     <!-- Features Section -->
     <section id="features" class="features section">
         <?php get_template_part('template_part/page_features'); ?>
-    </section><!-- /Features Section -->
+    </section>
+    <!-- /Features Section -->
 
     <!-- Features Cards Section -->
     <section id="features-cards" class="features-cards section">
