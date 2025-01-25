@@ -363,4 +363,90 @@ add_action('wp_head', function() {
 
 // =========
 
+// === Features2
+function custom_features2(){
+    register_post_type( 'features2',array(
+        'labels'=>array(
+        'name'=>('Features 2'),
+        'singular_name'=>('Feature 2'),
+        'add_new'=>('Add New Feature 2'),
+        'add_new_item'=>('Add New Feature 2'),
+        'edit_item'=>('Edit Feature 2'),
+        'new_item'=>('New Feature 2'),
+        'view_item'=>('View Feature 2'),
+        'not_found'=>('Sorry, we couldnot find the Feature 2 Section you are looking for'),
+        ),
+        'menu_icon'=>'dashicons-awards',
+        'public'=>true,
+        'publicly_queryable'=>true,
+        'exclude_from_search'=>true,
+        'menu_position'=>5,
+        'has_archive'=>true,
+        'hierarchial'=>false,
+        'show_ui'=>true,
+        'capability_type'=>'post',
+        'rewrite'=>array('slug'=>'features2'),
+        'supports'=>array('title','thumbnail','editor','excerpt'),
+
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init','custom_features2');
+
+// Add Meta Box for Features2 Icon
+function features2_icon_meta_box() {
+    add_meta_box(
+        'features2_icon',                  // Meta box ID
+        'Features2 Icon',                  // Title
+        'render_features2_icon_meta_box', // Callback function to render the box
+        'features2',                       // Post type (replace with your stats custom post type slug)
+        'normal',                          // Context (normal, side, advanced)
+        'high'                             // Priority
+    );
+}
+add_action('add_meta_boxes', 'features2_icon_meta_box');
+
+// Render Meta Box for Features2 Icon
+function render_features2_icon_meta_box($post) {
+    // Retrieve the saved value if available
+    $icon_class = get_post_meta($post->ID, '_features2_icon_class', true);
+
+    // Add a nonce field for security
+    wp_nonce_field('save_features2_icon_meta', 'features2_icon_meta_nonce');
+
+    ?>
+    <p>
+        <label for="features2_icon_class">Icon Class (e.g., "bi bi-award"):</label><br>
+        <input type="text" id="features2_icon_class" name="features2_icon_class" value="<?php echo esc_attr($icon_class); ?>" style="width: 100%;">
+        <small>Enter the CSS class for the icon. Use classes from a library like Bootstrap Icons.</small>
+    </p>
+    <?php
+}
+
+// Save Meta Box Data
+function save_features2_icon_meta($post_id) {
+    // Check nonce for security
+    if (!isset($_POST['features2_icon_meta_nonce']) || !wp_verify_nonce($_POST['features2_icon_meta_nonce'], 'save_features2_icon_meta')) {
+        return;
+    }
+
+    // Prevent auto-saves
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Ensure the user has permission to edit
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // Sanitize and save the icon class
+    if (isset($_POST['features2_icon_class'])) {
+        update_post_meta($post_id, '_features2_icon_class', sanitize_text_field($_POST['features2_icon_class']));
+    }
+}
+add_action('save_post', 'save_features2_icon_meta');
+
+
+
 
