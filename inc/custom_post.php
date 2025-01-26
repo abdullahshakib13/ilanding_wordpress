@@ -545,6 +545,65 @@ function save_features2_icon_meta($post_id) {
 }
 add_action('save_post', 'save_features2_icon_meta');
 
+// Features FAQ
+function custom_faq(){
+    register_post_type( 'faq',array(
+        'labels'=>array(
+        'name'=>('FAQ'),
+        'singular_name'=>('FAQ'),
+        'add_new'=>('Add New FAQ'),
+        'add_new_item'=>('Add New FAQ'),
+        'edit_item'=>('Edit FAQ'),
+        'new_item'=>('New FAQ'),
+        'view_item'=>('View FAQ'),
+        'not_found'=>('Sorry, we couldnot find the FAQ you are looking for'),
+        ),
+        'menu_icon'=>'dashicons-awards',
+        'public'=>true,
+        'publicly_queryable'=>true,
+        'exclude_from_search'=>true,
+        'menu_position'=>5,
+        'has_archive'=>true,
+        'hierarchial'=>true,
+        'show_ui'=>true,
+        'capability_type'=>'post',
+        'rewrite'=>array('slug'=>'slider'),
+        'supports'=>array('title','thumbnail','editor','excerpt'),
+
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init','custom_faq');
+
+// FAQ Icon Meta Box
+function faq_icon_meta_box() {
+    add_meta_box(
+        'faq_icon_meta',
+        'FAQ Icon',
+        'faq_icon_meta_callback',
+        'faq',
+        'side'
+    );
+}
+add_action('add_meta_boxes', 'faq_icon_meta_box');
+
+function faq_icon_meta_callback($post) {
+    $icon_class = get_post_meta($post->ID, '_faq_icon_class', true);
+    ?>
+    <label for="faq_icon_class">Icon Class (e.g., bi-chevron-right):</label>
+    <input type="text" name="faq_icon_class" id="faq_icon_class" value="<?php echo esc_attr($icon_class); ?>" style="width: 100%;" />
+    <?php
+}
+
+function save_faq_icon_meta($post_id) {
+    if (array_key_exists('faq_icon_class', $_POST)) {
+        update_post_meta($post_id, '_faq_icon_class', sanitize_text_field($_POST['faq_icon_class']));
+    }
+}
+add_action('save_post', 'save_faq_icon_meta');
+
+
+
 
 
 

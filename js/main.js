@@ -28,4 +28,10 @@ jQuery(document).ready(function ($) {
       dotsEach: true, // Ensure dots are clickable (like Swiper's clickable pagination)
     });
   });
-  
+
+  // for FAQ iLanding js
+  document.querySelectorAll('.faq-item h3, .faq-item .faq-toggle').forEach((faqItem) => {
+    faqItem.addEventListener('click', () => {
+      faqItem.parentNode.classList.toggle('faq-active');
+    });
+  });
