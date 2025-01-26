@@ -8,7 +8,7 @@
               </div>
               <?php 
              
-              query_posts('post_type=service&post_status=publish&post_per_page=3&order=ASC&paged='.get_query_var('post')); 
+              query_posts('post_type=hero&post_status=publish&post_per_page=3&order=ASC&paged='.get_query_var('post')); 
               if(have_posts()){
                   while(have_posts()){
                       the_post();

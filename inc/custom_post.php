@@ -1,16 +1,16 @@
 <?php 
- // Custom Service
- function custom_service(){
-    register_post_type( 'service',array(
+ // Custom Hero
+ function custom_hero(){
+    register_post_type( 'hero',array(
         'labels'=>array(
-        'name'=>('Services'),
-        'singular_name'=>('Service'),
-        'add_new'=>('Add New Service'),
-        'add_new_item'=>('Add New Service'),
-        'edit_item'=>('Edit Service'),
-        'new_item'=>('New Service'),
-        'view_item'=>('View Service'),
-        'not_found'=>('Sorry, we couldnot find the service you are looking for'),
+        'name'=>('Hero'),
+        'singular_name'=>('Hero'),
+        'add_new'=>('Add New Hero'),
+        'add_new_item'=>('Add New Hero'),
+        'edit_item'=>('Edit Hero'),
+        'new_item'=>('New Hero'),
+        'view_item'=>('View Hero'),
+        'not_found'=>('Sorry, we couldnot find the Hero you are looking for'),
         ),
         'menu_icon'=>'dashicons-networking',
         'public'=>true,
@@ -22,13 +22,156 @@
         'show_ui'=>true,
         'capability_type'=>'post',
         'taxonomies'=>array('category'),
-        'rewrite'=>array('slag'=>'service'),
+        'rewrite'=>array('slug'=>'hero'),
         'supports'=>array('title','thumbnail','editor','excerpt'),
 
     ));
     add_theme_support('post-thumbnails');
 }
-add_action('init','custom_service');
+add_action('init','custom_hero');
+
+// Custom About Us Post Type
+function custom_about_us(){
+    register_post_type('about_us', array(
+        'labels' => array(
+            'name' => 'About Us',
+            'singular_name' => 'About Us',
+            'add_new' => 'Add New About Us',
+            'add_new_item' => 'Add New About Us',
+            'edit_item' => 'Edit About Us',
+            'new_item' => 'New About Us',
+            'view_item' => 'View About Us',
+            'not_found' => 'Sorry, we could not find the About Us you are looking for',
+        ),
+        'menu_icon' => 'dashicons-networking',
+        'public' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => true,
+        'menu_position' => 5,
+        'has_archive' => false, // No archive for About Us pages
+        'hierarchical' => false, // Not hierarchical like pages
+        'show_ui' => true,
+        'capability_type' => 'post',
+        'taxonomies' => array('category'),
+        'rewrite' => array('slug' => 'about-us'),
+        'supports' => array('title', 'thumbnail', 'editor', 'excerpt'),
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init', 'custom_about_us');
+
+// About Us Meta Boxes
+// Add meta box for About Us details
+function add_about_us_meta_boxes() {
+    add_meta_box(
+        'about_us_details',
+        'About Us Details',
+        'render_about_us_meta_box',
+        'about_us',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'add_about_us_meta_boxes');
+
+// Render the About Us meta box
+function render_about_us_meta_box($post) {
+    // Nonce field for security
+    wp_nonce_field('about_us_nonce_action', 'about_us_nonce');
+
+    // Retrieve meta values
+    $contact_name = get_post_meta($post->ID, '_contact_name', true);
+    $contact_role = get_post_meta($post->ID, '_contact_role', true);
+    $contact_phone = get_post_meta($post->ID, '_contact_phone', true);
+    $icon_class = get_post_meta($post->ID, '_icon_class', true);
+    $features = get_post_meta($post->ID, '_about_us_features', true) ?: []; // Ensure it's an array
+
+    ?>
+    <h4>Features</h4>
+    <div id="feature-list-wrapper">
+        <?php foreach ($features as $index => $feature): ?>
+            <div class="feature-item">
+                <input type="text" name="about_us_features[]" value="<?php echo esc_attr($feature); ?>" style="width: 90%;" placeholder="Enter feature here" />
+                <button type="button" class="remove-feature button button-secondary">Remove</button>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <button type="button" id="add-feature" class="button button-primary">Add Feature</button>
+
+    <script>
+        (function($) {
+            $(document).ready(function() {
+                $('#add-feature').on('click', function() {
+                    $('#feature-list-wrapper').append(`
+                        <div class="feature-item">
+                            <input type="text" name="about_us_features[]" style="width: 90%;" placeholder="Enter feature here" />
+                            <button type="button" class="remove-feature button button-secondary">Remove</button>
+                        </div>
+                    `);
+                });
+
+                $('#feature-list-wrapper').on('click', '.remove-feature', function() {
+                    $(this).closest('.feature-item').remove();
+                });
+            });
+        })(jQuery);
+    </script>
+
+    <!-- Contact Info Fields -->
+    <p>
+        <label for="contact_name"><strong>Contact Name:</strong></label><br>
+        <input type="text" id="contact_name" name="contact_name" value="<?php echo esc_attr($contact_name); ?>" style="width: 100%;" placeholder="Enter contact name" />
+    </p>
+    <p>
+        <label for="contact_role"><strong>Role:</strong></label><br>
+        <input type="text" id="contact_role" name="contact_role" value="<?php echo esc_attr($contact_role); ?>" style="width: 100%;" placeholder="Enter role (e.g., CEO & Founder)" />
+    </p>
+    <p>
+        <label for="contact_phone"><strong>Phone:</strong></label><br>
+        <input type="text" id="contact_phone" name="contact_phone" value="<?php echo esc_attr($contact_phone); ?>" style="width: 100%;" placeholder="Enter phone number (e.g., +123 456-789)" />
+    </p>
+    <p>
+        <label for="icon_class"><strong>Icon Class:</strong></label><br>
+        <input type="text" id="icon_class" name="icon_class" value="<?php echo esc_attr($icon_class); ?>" style="width: 100%;" placeholder="Enter CSS class for the icon (e.g., bi bi-check-circle-fill)" />
+        <small>Use an icon class from a library like <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a>.</small>
+    </p>
+    <?php
+}
+
+// Save the About Us meta box data
+function save_about_us_meta_box_data($post_id) {
+    // Verify nonce
+    if (!isset($_POST['about_us_nonce']) || !wp_verify_nonce($_POST['about_us_nonce'], 'about_us_nonce_action')) {
+        return;
+    }
+
+    // Prevent autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Save Features (array of feature strings)
+    if (isset($_POST['about_us_features'])) {
+        $features = array_map('sanitize_text_field', $_POST['about_us_features']);
+        update_post_meta($post_id, '_about_us_features', $features);
+    }
+
+    // Save contact details
+    if (isset($_POST['contact_name'])) {
+        update_post_meta($post_id, '_contact_name', sanitize_text_field($_POST['contact_name']));
+    }
+    if (isset($_POST['contact_role'])) {
+        update_post_meta($post_id, '_contact_role', sanitize_text_field($_POST['contact_role']));
+    }
+    if (isset($_POST['contact_phone'])) {
+        update_post_meta($post_id, '_contact_phone', sanitize_text_field($_POST['contact_phone']));
+    }
+    if (isset($_POST['icon_class'])) {
+        update_post_meta($post_id, '_icon_class', sanitize_text_field($_POST['icon_class']));
+    }
+}
+add_action('save_post', 'save_about_us_meta_box_data');
+
 
  // Custom Stats
  function custom_stats(){
@@ -241,7 +384,7 @@ function custom_features_card(){
         'hierarchial'=>true,
         'show_ui'=>true,
         'capability_type'=>'post',
-        'rewrite'=>array('slag'=>'slider'),
+        'rewrite'=>array('slug'=>'slider'),
         'supports'=>array('title','thumbnail','editor','excerpt'),
 
     ));
@@ -316,10 +459,6 @@ function save_feature_box_meta($post_id) {
         update_post_meta($post_id, '_feature_background_color', sanitize_text_field($_POST['feature_background_color']));
     }
 
-    // Sanitize and save the animation delay
-    // if (isset($_POST['feature_animation_delay'])) {
-    //     update_post_meta($post_id, '_feature_animation_delay', intval($_POST['feature_animation_delay']));
-    // }
 }
 add_action('save_post', 'save_feature_box_meta');
 add_action('wp_head', function() {
@@ -330,122 +469,83 @@ add_action('wp_head', function() {
 });
 
 
-//========== 
-// function register_feature_boxes_cpt() {
-//     $labels = array(
-//         'name'                  => _x('Feature Boxes', 'Post type general name', 'textdomain'),
-//         'singular_name'         => _x('Feature Box', 'Post type singular name', 'textdomain'),
-//         'menu_name'             => _x('Feature Boxes', 'Admin Menu text', 'textdomain'),
-//         'name_admin_bar'        => _x('Feature Box', 'Add New on Toolbar', 'textdomain'),
-//         'add_new'               => __('Add New', 'textdomain'),
-//         'add_new_item'          => __('Add New Feature Box', 'textdomain'),
-//         'edit_item'             => __('Edit Feature Box', 'textdomain'),
-//         'new_item'              => __('New Feature Box', 'textdomain'),
-//         'view_item'             => __('View Feature Box', 'textdomain'),
-//         'all_items'             => __('All Feature Boxes', 'textdomain'),
-//         'search_items'          => __('Search Feature Boxes', 'textdomain'),
-//         'not_found'             => __('No feature boxes found.', 'textdomain'),
-//         'not_found_in_trash'    => __('No feature boxes found in Trash.', 'textdomain'),
-//     );
-
-//     $args = array(
-//         'labels'             => $labels,
-//         'public'             => true,
-//         'menu_icon'          => 'dashicons-awards',
-//         'supports'           => array('title', 'editor', 'custom-fields'),
-//         'has_archive'        => true,
-//         'rewrite'            => array('slug' => 'feature-boxes'),
-//     );
-
-//     register_post_type('feature_box', $args);
-// }
-// add_action('init', 'register_feature_boxes_cpt');
-
-// =========
-
-// === Features2
-function custom_features2(){
-    register_post_type( 'features2',array(
-        'labels'=>array(
-        'name'=>('Features 2'),
-        'singular_name'=>('Feature 2'),
-        'add_new'=>('Add New Feature 2'),
-        'add_new_item'=>('Add New Feature 2'),
-        'edit_item'=>('Edit Feature 2'),
-        'new_item'=>('New Feature 2'),
-        'view_item'=>('View Feature 2'),
-        'not_found'=>('Sorry, we couldnot find the Feature 2 Section you are looking for'),
+// === Features2 Custom Post Type ===
+function custom_features2() {
+    register_post_type('features2', array(
+        'labels' => array(
+            'name'               => 'Features 2',
+            'singular_name'      => 'Feature 2',
+            'add_new'            => 'Add New Feature 2',
+            'add_new_item'       => 'Add New Feature 2',
+            'edit_item'          => 'Edit Feature 2',
+            'new_item'           => 'New Feature 2',
+            'view_item'          => 'View Feature 2',
+            'not_found'          => 'Sorry, we couldn’t find the Feature 2 section you’re looking for.',
         ),
-        'menu_icon'=>'dashicons-awards',
-        'public'=>true,
-        'publicly_queryable'=>true,
-        'exclude_from_search'=>true,
-        'menu_position'=>5,
-        'has_archive'=>true,
-        'hierarchial'=>false,
-        'show_ui'=>true,
-        'capability_type'=>'post',
-        'rewrite'=>array('slug'=>'features2'),
-        'supports'=>array('title','thumbnail','editor','excerpt'),
-
+        'menu_icon'           => 'dashicons-awards',
+        'public'              => true,
+        'publicly_queryable'  => true,
+        'exclude_from_search' => true,
+        'menu_position'       => 5,
+        'has_archive'         => true,
+        'hierarchical'        => false,
+        'show_ui'             => true,
+        'capability_type'     => 'post',
+        'rewrite'             => array('slug' => 'features2'),
+        'supports'            => array('title', 'thumbnail', 'editor', 'excerpt'),
     ));
+
     add_theme_support('post-thumbnails');
 }
-add_action('init','custom_features2');
+add_action('init', 'custom_features2');
 
-// Add Meta Box for Features2 Icon
+// === Add Meta Box for Features2 Icon ===
 function features2_icon_meta_box() {
     add_meta_box(
-        'features2_icon',                  // Meta box ID
-        'Features2 Icon',                  // Title
-        'render_features2_icon_meta_box', // Callback function to render the box
-        'features2',                       // Post type (replace with your stats custom post type slug)
-        'normal',                          // Context (normal, side, advanced)
-        'high'                             // Priority
+        'features2_icon',
+        'Features2 Icon',
+        'render_features2_icon_meta_box',
+        'features2',
+        'normal',
+        'default'
     );
 }
 add_action('add_meta_boxes', 'features2_icon_meta_box');
 
-// Render Meta Box for Features2 Icon
+// === Render Meta Box for Features2 Icon ===
 function render_features2_icon_meta_box($post) {
-    // Retrieve the saved value if available
     $icon_class = get_post_meta($post->ID, '_features2_icon_class', true);
-
-    // Add a nonce field for security
     wp_nonce_field('save_features2_icon_meta', 'features2_icon_meta_nonce');
-
     ?>
     <p>
-        <label for="features2_icon_class">Icon Class (e.g., "bi bi-award"):</label><br>
+        <label for="features2_icon_class">Icon Class:</label><br>
         <input type="text" id="features2_icon_class" name="features2_icon_class" value="<?php echo esc_attr($icon_class); ?>" style="width: 100%;">
         <small>Enter the CSS class for the icon. Use classes from a library like Bootstrap Icons.</small>
     </p>
     <?php
 }
 
-// Save Meta Box Data
+// === Save Meta Box Data ===
 function save_features2_icon_meta($post_id) {
-    // Check nonce for security
     if (!isset($_POST['features2_icon_meta_nonce']) || !wp_verify_nonce($_POST['features2_icon_meta_nonce'], 'save_features2_icon_meta')) {
         return;
     }
 
-    // Prevent auto-saves
     if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
         return;
     }
 
-    // Ensure the user has permission to edit
     if (!current_user_can('edit_post', $post_id)) {
         return;
     }
 
-    // Sanitize and save the icon class
     if (isset($_POST['features2_icon_class'])) {
         update_post_meta($post_id, '_features2_icon_class', sanitize_text_field($_POST['features2_icon_class']));
     }
 }
 add_action('save_post', 'save_features2_icon_meta');
+
+
 
 
 
