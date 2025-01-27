@@ -21,7 +21,6 @@
         <div class="col-lg-2 col-md-3 footer-links">
           <?php dynamic_sidebar('footer-5'); ?>
         </div>
-
       </div>
     </div>
 
