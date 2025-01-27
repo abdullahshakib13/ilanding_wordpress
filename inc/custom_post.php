@@ -172,6 +172,78 @@ function save_about_us_meta_box_data($post_id) {
 }
 add_action('save_post', 'save_about_us_meta_box_data');
 
+// 
+// Custom Features Post Type
+function custom_features(){
+    register_post_type('features', array(
+        'labels' => array(
+            'name' => 'Features',
+            'singular_name' => 'Feature',
+            'add_new' => 'Add New Features',
+            'add_new_item' => 'Add New Features',
+            'edit_item' => 'Edit Features',
+            'new_item' => 'New Features',
+            'view_item' => 'View Features',
+            'not_found' => 'Sorry, we could not find the Features you are looking for',
+        ),
+        'menu_icon' => 'dashicons-networking',
+        'public' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => true,
+        'menu_position' => 5,
+        'has_archive' => false, // No archive for About Us pages
+        'hierarchical' => false, // Not hierarchical like pages
+        'show_ui' => true,
+        'capability_type' => 'post',
+        'taxonomies' => array('category'),
+        'rewrite' => array('slug' => 'features'),
+        'supports' => array('title', 'thumbnail', 'editor', 'excerpt'),
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init', 'custom_Features');
+
+// Meta box for Tab Title features
+function create_tab_title_meta_box() {
+    add_meta_box(
+        'tab_title_meta_box', // Unique ID for the meta box
+        'Tab Title', // Title of the meta box
+        'display_tab_title_meta_box', // Callback function to display the meta box content
+        'features', // Post type to display the meta box on
+        'normal', // Position of the meta box (side or normal)
+        'high' // Priority of the meta box
+    );
+}
+add_action( 'add_meta_boxes', 'create_tab_title_meta_box' );
+
+function display_tab_title_meta_box( $post ) {
+    // Get the stored value
+    $tab_title = get_post_meta( $post->ID, '_tab_title', true );
+    ?>
+    <label for="tab_title">Tab Title:</label>
+    <input type="text" id="tab_title" name="tab_title" value="<?php echo esc_attr( $tab_title ); ?>" />
+    <?php
+}
+
+function save_tab_title_meta_box( $post_id ) {
+    // Check if the current user has permission to edit the post
+    if ( !current_user_can( 'edit_post', $post_id ) ) {
+        return $post_id;
+    }
+
+    // Check if the data was submitted
+    if ( !isset( $_POST['tab_title'] ) ) {
+        return $post_id;
+    }
+
+    // Sanitize the user input
+    $tab_title = sanitize_text_field( $_POST['tab_title'] );
+
+    // Update the meta field
+    update_post_meta( $post_id, '_tab_title', $tab_title );
+}
+add_action( 'save_post', 'save_tab_title_meta_box' );
+
 
  // Custom Stats
  function custom_stats(){
@@ -360,6 +432,129 @@ function save_testimonial_designation($post_id) {
 }
 add_action('save_post', 'save_testimonial_designation');
 
+  // Custom Service
+  function custom_service(){
+    register_post_type( 'service',array(
+        'labels'=>array(
+        'name'=>('Services'),
+        'singular_name'=>('Service'),
+        'add_new'=>('Add New Service'),
+        'add_new_item'=>('Add New Service'),
+        'edit_item'=>('Edit Service'),
+        'new_item'=>('New Service'),
+        'view_item'=>('View Service'),
+        'not_found'=>('Sorry, we couldnot find the service you are looking for'),
+        ),
+        'menu_icon'=>'dashicons-networking',
+        'public'=>true,
+        'publicly_queryable'=>true,
+        'exclude_from_search'=>true,
+        'menu_position'=>5,
+        'has_archive'=>true,
+        'hierarchial'=>true,
+        'show_ui'=>true,
+        'capability_type'=>'post',
+        'taxonomies'=>array('category'),
+        'rewrite'=>array('slug'=>'service'),
+        'supports'=>array('title','thumbnail','editor','excerpt'),
+
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init','custom_service');
+
+// Add a meta box
+function add_service_icon_metabox() {
+    add_meta_box(
+        'service_icon_metabox',      // Meta box ID
+        'Service Icon',              // Title
+        'render_service_icon_metabox', // Callback function
+        'service',            // Post types where it should appear
+        'normal',                      // Context
+        'default' 
+    );
+}
+add_action('add_meta_boxes', 'add_service_icon_metabox');
+
+// Render the meta box
+function render_service_icon_metabox($post) {
+    // Retrieve current value of the meta key
+    $service_icon = get_post_meta($post->ID, '_service_icon', true);
+    
+    // Add a nonce field for security
+    wp_nonce_field('save_service_icon_metabox', 'service_icon_metabox_nonce');
+    
+    // Input field for the icon (font-awesome class, image URL, etc.)
+    ?>
+    <p>
+    <label for="service_icon">Enter Icon:</label> 
+    <input type="text" id="service_icon" name="service_icon" value="<?php echo esc_attr($service_icon); ?>" style="width: 100%; margin-top: 5px;" />
+    </p>
+    <?php
+}
+
+// Save the meta box data
+function save_service_icon_metabox($post_id) {
+    // Verify nonce
+    if (!isset($_POST['service_icon_metabox_nonce']) || !wp_verify_nonce($_POST['service_icon_metabox_nonce'], 'save_service_icon_metabox')) {
+        return;
+    }
+
+    // Check autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Check permissions
+    if (isset($_POST['post_type']) && 'page' === $_POST['post_type']) {
+        if (!current_user_can('edit_page', $post_id)) {
+            return;
+        }
+    } elseif (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // Sanitize and save the input
+    if (isset($_POST['service_icon'])) {
+        $service_icon = sanitize_text_field($_POST['service_icon']);
+        update_post_meta($post_id, '_service_icon', $service_icon);
+    } else {
+        delete_post_meta($post_id, '_service_icon');
+    }
+}
+add_action('save_post', 'save_service_icon_metabox');
+
+// 
+  // Custom Service
+  function custom_service_details(){
+    register_post_type( 'service_details',array(
+        'labels'=>array(
+        'name'=>('Service Details'),
+        'singular_name'=>('Service Details'),
+        'add_new'=>('Add New Service Details'),
+        'add_new_item'=>('Add New Service Details'),
+        'edit_item'=>('Edit Service Details'),
+        'new_item'=>('New Service Details'),
+        'view_item'=>('View Service Details'),
+        'not_found'=>('Sorry, we couldnot find the Service Details you are looking for'),
+        ),
+        'menu_icon'=>'dashicons-networking',
+        'public'=>true,
+        'publicly_queryable'=>true,
+        'exclude_from_search'=>true,
+        'menu_position'=>5,
+        'has_archive'=>true,
+        'hierarchial'=>true,
+        'show_ui'=>true,
+        'capability_type'=>'post',
+        'taxonomies'=>array('category'),
+        'rewrite'=>array('slug'=>'service_details'),
+        'supports'=>array('title','thumbnail','editor','excerpt'),
+
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init','custom_service_details');
 
 // 
 // Features Card

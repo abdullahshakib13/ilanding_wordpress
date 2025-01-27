@@ -6,7 +6,7 @@
                   the_post();
           ?>
               <div class="swiper-slide">
-                  <?php echo the_post_thumbnail('slider'); ?>
+                  <img src="<?php echo the_post_thumbnail_url('slider');?>" class="img-fluid" alt="" srcset="">
               </div> 
           <?php 
                   }
