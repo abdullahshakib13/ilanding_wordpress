@@ -34,11 +34,12 @@ get_header();
             <div class="service-box">
               <h4>Services List</h4>
               <div class="services-list">
-                <a href="#" class="active"><i class="bi bi-arrow-right-circle"></i><span>Web Design</span></a>
+                 <?php dynamic_sidebar('services-list'); ?>
+                <!-- <a href="#" class="active"><i class="bi bi-arrow-right-circle"></i><span>Web Design</span></a>
                 <a href="#"><i class="bi bi-arrow-right-circle"></i><span>Web Design</span></a>
                 <a href="#"><i class="bi bi-arrow-right-circle"></i><span>Product Management</span></a>
                 <a href="#"><i class="bi bi-arrow-right-circle"></i><span>Graphic Design</span></a>
-                <a href="#"><i class="bi bi-arrow-right-circle"></i><span>Marketing</span></a>
+                <a href="#"><i class="bi bi-arrow-right-circle"></i><span>Marketing</span></a> -->
               </div>
             </div><!-- End Services List -->
 

@@ -1,7 +1,8 @@
 <div class="row g-4 g-lg-5">
           <div class="col-lg-5">
             <div class="info-box" data-aos="fade-up" data-aos-delay="200">
-              <h3>Contact Info</h3>
+            <?php dynamic_sidebar('contact-info'); ?>
+              <!-- <h3>Contact Info</h3>
               <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis.</p>
 
               <div class="info-item" data-aos="fade-up" data-aos-delay="300">
@@ -35,7 +36,7 @@
                   <p>info@example.com</p>
                   <p>contact@example.com</p>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
 
