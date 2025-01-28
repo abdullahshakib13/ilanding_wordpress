@@ -440,6 +440,74 @@ function save_testimonial_designation($post_id) {
 }
 add_action('save_post', 'save_testimonial_designation');
 
+// Custom Counts Section
+function custom_count() {
+    register_post_type('count', array(
+        'labels' => array(
+            'name' => ('Count'),
+            'singular_name' => ('Count'),
+            'add_new' => ('Add New Count'),
+            'add_new_item' => ('Add New Count'),
+            'edit_item' => ('Edit Count'),
+            'new_item' => ('New Count'),
+            'view_item' => ('View Count'),
+            'not_found' => ('Sorry, we could not find the Count you are looking for'),
+        ),
+        'menu_icon' => 'dashicons-post-status',
+        'public' => true,
+        'publicly_queryable' => true,
+        'exclude_from_search' => true,
+        'menu_position' => 5,
+        'has_archive' => true,
+        'hierarchial' => true,
+        'show_ui' => true,
+        'capability_type' => 'post',
+        'taxonomies' => array('category'),
+        'rewrite' => array('slug' => 'count'),
+        'supports' => array('title', 'thumbnail', 'editor', 'excerpt'),
+    ));
+    add_theme_support('post-thumbnails');
+}
+add_action('init', 'custom_count');
+
+// Add Count Number Field Meta Box
+function add_number_meta_box() {
+    add_meta_box(
+        'count_number', // ID of the meta box
+        'Count Number', // Title of the meta box
+        'render_number_meta_box', // Callback function to display the meta box
+        'count', // Post type
+        'normal', // Context
+        'default' // Priority
+    );
+}
+add_action('add_meta_boxes', 'add_number_meta_box');
+
+// Render the Designation Field in the Meta Box
+function render_number_meta_box($post) {
+// Retrieve the current value of the designation
+     $number = get_post_meta($post->ID, '_count_number', true);
+    
+   ?>
+    <label for="count_number">Number:</label> 
+     <input type="number" name="count_number" id="count_number" value="<?php echo esc_attr($number); ?>" style="width: 100%;" /> 
+     <?php
+ }
+
+// Save the Designation Field Value
+function save_count_number($post_id) {
+     // Check if the current user has permission to edit the post
+    if (!current_user_can('edit_post', $post_id)) {
+         return;
+   }
+
+     // Save the Number value
+     if (isset($_POST['count_number'])) {
+         update_post_meta($post_id, '_count_number', sanitize_text_field($_POST['count_number']));
+     }
+ }
+ add_action('save_post', 'save_count_number');
+
   // Custom Service
   function custom_service(){
     register_post_type( 'service',array(

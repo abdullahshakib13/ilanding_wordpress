@@ -35,3 +35,5 @@ jQuery(document).ready(function ($) {
       faqItem.parentNode.classList.toggle('faq-active');
     });
   });
+
+  new PureCounter();
