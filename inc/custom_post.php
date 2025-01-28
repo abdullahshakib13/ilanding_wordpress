@@ -412,9 +412,13 @@ add_action('add_meta_boxes', 'add_designation_meta_box');
 function render_designation_meta_box($post) {
     // Retrieve the current value of the designation
     $designation = get_post_meta($post->ID, '_testimonial_designation', true);
+    $star = get_post_meta($post->ID, '_testimonial_star', true);
+    
     ?>
     <label for="testimonial_designation">Designation:</label>
     <input type="text" name="testimonial_designation" id="testimonial_designation" value="<?php echo esc_attr($designation); ?>" style="width: 100%;" />
+    <label for="testimonial_star">Star Number:</label>
+    <input type="number" name="testimonial_star" id="testimonial_star" value="<?php echo esc_attr($star); ?>" style="width: 100%;" />
     <?php
 }
 
@@ -428,6 +432,10 @@ function save_testimonial_designation($post_id) {
     // Save the designation value
     if (isset($_POST['testimonial_designation'])) {
         update_post_meta($post_id, '_testimonial_designation', sanitize_text_field($_POST['testimonial_designation']));
+    }
+    // Save the Star value
+    if (isset($_POST['testimonial_star'])) {
+        update_post_meta($post_id, '_testimonial_star', sanitize_text_field($_POST['testimonial_star']));
     }
 }
 add_action('save_post', 'save_testimonial_designation');

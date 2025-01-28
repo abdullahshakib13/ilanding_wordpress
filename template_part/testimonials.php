@@ -22,7 +22,17 @@
                 <h3><?php the_title(); ?></h3>
                 <h4><?php echo get_post_meta(get_the_ID(),'_testimonial_designation',true); ?></h4>
                 <div class="stars">
-                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                  <?php 
+                  $i = 0;
+                  
+                   $star_count =  get_post_meta(get_the_ID(),'_testimonial_star',true);
+                   for($i = 0; $i < $star_count; $i++ ){
+                   
+                  ?>
+                  <i class="bi bi-star-fill"></i>
+                <?php
+                   }
+                ?>
                 </div>
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
